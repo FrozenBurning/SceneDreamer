@@ -8,6 +8,11 @@
 
 ### Paper | [Project Page](https://scene-dreamer.github.io/) | [Video](https://youtu.be/nEfSKL2_FoA)
 
+
+Source code will be released within a month! Stay tuned :beers
+<br>
+
+
 <tr>
     <img src="./teaser.gif" width="100%"/>
 </tr>
