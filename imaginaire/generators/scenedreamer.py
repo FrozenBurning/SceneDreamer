@@ -285,7 +285,7 @@ class Generator(Base3DGenerator):
         [35, 114, 94],
         [0, 0, 255],
         [0, 255, 0],
-        ]) / 255 * 2 - 1
+        ]).to(device) / 255 * 2 - 1
         semantic_map = torch.argmax(self.voxel.current_semantic_map, dim=1)
 
         self.pad = pad
