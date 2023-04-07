@@ -1,0 +1,19 @@
+name: scenedreamer
+channels:
+  - pytorch
+  - nvidia
+dependencies:
+  - python=3.8
+  - pytorch=1.9.1
+  - cudatoolkit=11.1
+  - torchvision
+  - pip
+  - numpy
+  - scipy
+  - scikit-image
+  - pip:
+    - Pillow==6.1
+    - setuptools==59.5.0
+    - einops
+    - noise
+    - opencv-python

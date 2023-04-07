@@ -1,0 +1,81 @@
+inference_args:
+    # 0: Camera orbiting the scene & looking at the center
+    # 1: Camera orbiting the scene & zooming in
+    # 2: Camera orbiting the scene & coming closer and closer to the center
+    # 3: Similar to 2, camera orbiting at the opposite direction
+    # 4: Simliar to 2, camera stays further away from the center
+    # 5: Camera sits at the center and look outwards
+    # 6: Camera rises while looking down
+    # 7: Camera really far away looking down at a 45deg angle
+    # 8: Camera for perpetual view generation, non-sliding window
+    # 9: Camera for infinite world generation, sliding window
+    camera_mode: 4
+
+    cam_maxstep: 40
+    resolution_hw: [540, 960]
+    num_samples: 40
+    cam_ang: 72
+
+gen:
+    type: imaginaire.generators.scenedreamer
+    pcg_dataset_path: None
+    pcg_cache: False
+    scene_size: 2048
+
+    blk_feat_dim: 64
+
+    pe_lvl_feat: 4
+    pe_incl_orig_feat: False
+    pe_no_pe_feat_dim: 40
+    pe_lvl_raydir: 0
+    pe_incl_orig_raydir: False
+    style_dims: 128  # Set to 0 to disable style.
+    interm_style_dims: 256
+    final_feat_dim: 64
+
+    # Number of pixels removed from each edge to reduce boundary artifact of CNN
+    # both sides combined (8 -> 4 on left and 4 on right).
+    pad: 6
+
+    # ======== Sky network ========
+    pe_lvl_raydir_sky: 5
+    pe_incl_orig_raydir_sky: True
+
+    # ======== Style Encoder =========
+    # Comment out to disable style encoder.
+    style_enc:
+        num_filters: 64
+        kernel_size: 3
+        weight_norm_type: 'none'
+
+    stylenet_model: StyleMLP
+    stylenet_model_kwargs:
+        normalize_input: True
+        num_layers: 5
+
+    mlp_model: RenderMLP
+    mlp_model_kwargs:
+        use_seg: True
+
+    # ======== Ray Casting Params ========
+    num_blocks_early_stop: 6
+    num_samples: 24 # Original model uses 24. Reduced to 4 to allow training on 12GB GPUs (with significant performance penalty)
+    sample_depth: 3 # Stop the ray after certain depth
+    coarse_deterministic_sampling: False
+    sample_use_box_boundaries: False # Including voxel boundaries into the sample
+
+    # ======== Blender ========
+    raw_noise_std: 0.0
+    dists_scale: 0.25
+    clip_feat_map: True
+    # Prevent sky from leaking to the foreground.
+    keep_sky_out: True
+    keep_sky_out_avgpool: True
+    sky_global_avgpool: True
+
+    # ======== Label translator ========
+    reduced_label_set: True
+    use_label_smooth: True
+    use_label_smooth_real: True
+    use_label_smooth_pgt: True
+    label_smooth_dia: 11
