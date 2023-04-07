@@ -16,6 +16,9 @@
 <a target="_blank" href="https://arxiv.org/abs/2302.01330">
   <img src="https://img.shields.io/badge/arXiv-2302.01330-b31b1b.svg" alt="arXiv Paper"/>
 </a>
+<a target="_blank" href="https://huggingface.co/spaces/FrozenBurning/SceneDreamer">
+  <img src="https://img.shields.io/badge/Demo-%F0%9F%A4%97%20Hugging%20Face-blue" alt="HuggingFace"/>
+</a>
 <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FFrozenBurning%2FSceneDreamer&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
 </div>
 
@@ -23,7 +26,7 @@
 <h4>TL;DR</h4>
 <h5>SceneDreamer learns to generate unbounded 3D scenes from in-the-wild 2D image collections. <br> Our method can synthesize diverse landscapes across different styles, with 3D consistency, well-defined depth, and free camera trajectory.</h5>
 
-### [Paper](https://arxiv.org/abs/2302.01330) | [Project Page](https://scene-dreamer.github.io/) | [Video](https://youtu.be/nEfSKL2_FoA)
+### [Paper](https://arxiv.org/abs/2302.01330) | [Project Page](https://scene-dreamer.github.io/) | [Video](https://youtu.be/nEfSKL2_FoA) | [Hugging Face :hugs:](https://huggingface.co/spaces/FrozenBurning/SceneDreamer)
 
 <br>
 
@@ -35,6 +38,8 @@
 </div>
 
 ## Updates
+
+[04/2023] Hugging Face demo released! [![demo](https://img.shields.io/badge/Demo-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/FrozenBurning/SceneDreamer)
 
 [04/2023] Inference code released!
 
