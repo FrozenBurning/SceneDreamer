@@ -192,7 +192,7 @@ torch::Tensor positional_encoding_cuda(const torch::Tensor& in_feature, int ndeg
         in_feature.data_ptr<float>(), p
     );
 
-    THCudaCheck(cudaGetLastError());
+    C10_CUDA_CHECK(cudaGetLastError());
     return out_feature;
 }
 
@@ -279,7 +279,7 @@ torch::Tensor positional_encoding_backward_cuda(const torch::Tensor& out_feature
         out_feature_grad.data_ptr<float>(), out_feature.data_ptr<float>(), p
     );
 
-    THCudaCheck(cudaGetLastError());
+    C10_CUDA_CHECK(cudaGetLastError());
 
     return in_feature_grad;
 }

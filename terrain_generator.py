@@ -354,6 +354,7 @@ def PCGGen(map_size, nbins = 256, seed = 3407):
     rivers_biome_map = river_land_mask * biome_map + (1 - river_land_mask) * biome_count # use biome count=9 as water indicator
 
     semantic_map = rivers_biome_map
+    semantic_map_color = rivers_biome_color_map
     height_map = adjusted_height_river_map
 
     tree_densities = [4000, 1500, 8000, 1000, 10000, 25000, 10000, 20000, 5000]
@@ -364,7 +365,7 @@ def PCGGen(map_size, nbins = 256, seed = 3407):
         canvas[trees[k][:, 1], trees[k][:, 0]] = k
     tree_map = canvas
 
-    return height_map, semantic_map, tree_map
+    return height_map, semantic_map, tree_map, semantic_map_color
 
 if __name__ == '__main__':
     import os
@@ -375,7 +376,8 @@ if __name__ == '__main__':
     parser.add_argument('--outdir', type=str, required=True)
     args = parser.parse_args()
     outdir = args.outdir
-    heightmap, semanticmap, treemap = PCGGen(args.size, args.nbins, args.seed)
+    heightmap, semanticmap, treemap, colormap = PCGGen(args.size, args.nbins, args.seed)
     save_height_map(heightmap, os.path.join(outdir, 'heightmap.png'))
     cv2.imwrite(os.path.join(outdir, 'semanticmap.png'), semanticmap.astype(np.uint8))
+    cv2.imwrite(os.path.join(outdir, 'colormap.png'), colormap[..., [2, 1, 0]].astype(np.uint8))
     cv2.imwrite(os.path.join(outdir, 'treemap.png'), treemap)

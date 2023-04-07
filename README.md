@@ -56,7 +56,7 @@ We highly recommend using [Anaconda](https://www.anaconda.com/) to manage your p
 ```bash
 # install python dependencies
 conda env create -f environment.yml
-conda install pynvml wandb tensorboard -c conda-forge
+conda activate scenedreamer
 
 # compile third party libraries
 export CUDA_VERSION=$(nvcc --version| grep -Po "(\d+\.)+\d+" | head -1)
@@ -76,10 +76,10 @@ done
 
 cd gridencoder
 python setup.py build_ext --inplace
+python -m pip install .
 cd ${CURRENT}
 
 # Now, all done!
-conda activate scenedreamer
 ```
 
 ## Inference
@@ -97,7 +97,7 @@ Please download our checkpoints from [Google Drive](https://drive.google.com/fil
 ### Render!
 You can run the following command to generate your own 3D world!
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port 8888 inference.py --config configs/scenedreamer_inference.yaml --output_dir ./test/ --seed 8888 --checkpoint ./scenedreamer_released.pt --gpu_id 0
+python inference.py --config configs/scenedreamer_inference.yaml --output_dir ./test/ --seed 8888 --checkpoint ./scenedreamer_released.pt
 ```
 
 The results will be saved under `./test` as the following structures:

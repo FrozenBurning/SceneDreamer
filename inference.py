@@ -27,35 +27,18 @@ def parse_args():
                         help='Dir for saving logs and models.')
     parser.add_argument('--seed', type=int, default=0,
                         help='Random seed.')
-    parser.add_argument('--local_rank', type=int, default=0)
-    parser.add_argument('--single_gpu', action='store_true')
-    parser.add_argument('--num_workers', type=int)
     parser.add_argument('--debug', action='store_true')
-    parser.add_argument('--gpu_id', type=int)
     args = parser.parse_args()
     return args
 
 
 def main():
     args = parse_args()
-    os.environ["CUDA_VISIBLE_DEVICES"] = '{}'.format(args.gpu_id)
-    set_affinity(args.local_rank)
-    set_random_seed(args.seed, by_rank=True)
     cfg = Config(args.config)
     imaginaire.config.DEBUG = args.debug
 
     if not hasattr(cfg, 'inference_args'):
         cfg.inference_args = None
-
-    # If args.single_gpu is set to True,
-    # we will disable distributed data parallel.
-    if not args.single_gpu:
-        cfg.local_rank = args.local_rank
-        init_dist(cfg.local_rank)
-
-    # Override the number of data loading workers if necessary
-    if args.num_workers is not None:
-        cfg.data.num_workers = args.num_workers
 
     # Create log directory for storing training results.
     cfg.date_uid, cfg.logdir = init_logging(args.config, args.logdir)
