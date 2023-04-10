@@ -136,6 +136,12 @@ Here is a sampled scene with our default rendering parameters:
     <img src="./assets/sample_traj.gif" width="100%"/>
 </tr>
 
+### Gradio Demo
+You can also locally launch our demo with gradio UI by:
+```bash
+python app_gradio.py
+```
+Alternatively, you can run the demo online [![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg)](https://huggingface.co/spaces/FrozenBurning/SceneDreamer)
 
 ## License
 
