@@ -60,7 +60,7 @@ If you find our work useful for your research, please consider citing this paper
 We highly recommend using [Anaconda](https://www.anaconda.com/) to manage your python environment. You can setup the required environment by the following commands:
 ```bash
 # install python dependencies
-conda env create -f environment.yml
+conda env create -f environment.yaml
 conda activate scenedreamer
 
 # compile third party libraries
