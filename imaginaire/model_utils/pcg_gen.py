@@ -6,6 +6,73 @@ import random
 import cv2
 import os
 
+
+class PCGCache(nn.Module):
+    r"""PCG Datasets"""
+    def __init__(self, pcg_dataset_path):
+        super(PCGCache, self).__init__()
+        '''
+        height_map: [size, size] array, in [-1, 1] range where < 0 indicates water
+        semantic_map: [size, size] array, in {0, 1, ..., 9} range, where 9 indicates water
+        '''
+        self.sample_size = 1024
+        self.sample_height = 256
+        pcg_world_list = sorted(os.listdir(pcg_dataset_path))
+        self.pcg_world_path = []
+        for p in pcg_world_list:
+            self.pcg_world_path.append(os.path.join(pcg_dataset_path, p))
+        self.n = len(self.pcg_world_path)
+
+    def sample_world(self, device):
+        idx = random.randint(0, self.n - 1)
+        world_path = self.pcg_world_path[idx]
+        voxel_sparse = np.load(os.path.join(world_path, 'voxel_sparse.npy'))
+        current_height_map = np.load(os.path.join(world_path, 'height_map.npy'))
+        current_semantic_map = np.load(os.path.join(world_path, 'semantic_map.npy'))
+        heightmap = np.load(os.path.join(world_path, 'hmap_mc.npy'))
+        voxel_sparse = torch.from_numpy(voxel_sparse).to(device)
+        voxel_1 = voxel_sparse[0, :].to(torch.int64)
+        voxel_2 = voxel_sparse[1, :].to(torch.int64)
+        voxel_3 = voxel_sparse[2, :].to(torch.int64)
+        self.voxel_t = torch.zeros(self.sample_height, self.sample_size, self.sample_size, device=device, dtype=torch.int32)
+        self.voxel_t[voxel_1, voxel_2, voxel_3] = voxel_sparse[3, :].to(torch.int32)
+        self.current_height_map = torch.from_numpy(current_height_map).to(device)
+        self.current_semantic_map = torch.from_numpy(current_semantic_map).to(device)
+        self.heightmap = torch.from_numpy(heightmap)
+        self.trans_mat = torch.eye(4)
+        gnd_level = heightmap.min()
+        sky_level = heightmap.max() + 1
+        self.voxel_t = self.voxel_t[gnd_level:sky_level, :, :]
+        self.trans_mat[0, 3] += gnd_level
+
+    def world2local(self, v, is_vec=False):
+        mat_world2local = torch.inverse(self.trans_mat)
+        return trans_vec_homo(mat_world2local, v, is_vec)
+
+    def _truncate_voxel(self):
+        gnd_level = self.heightmap.min()
+        sky_level = self.heightmap.max() + 1
+        self.voxel_t = self.voxel_t[gnd_level:sky_level, :, :]
+        self.trans_mat[0, 3] += gnd_level
+        print('[GANcraft-utils] Voxel truncated. Gnd: {}; Sky: {}.'.format(gnd_level.item(), sky_level.item()))
+
+    def is_sea(self, loc):
+        r"""loc: [2]: x, z."""
+        x = int(loc[1])
+        z = int(loc[2])
+        if x < 0 or x > self.heightmap.size(0) or z < 0 or z > self.heightmap.size(1):
+            print('[McVoxel] is_sea(): Index out of bound.')
+            return True
+        y = self.heightmap[x, z] - self.trans_mat[0, 3]
+        y = int(y)
+        if self.voxel_t[y, x, z] == 26:
+            print('[McVoxel] is_sea(): Get a sea.')
+            print(self.voxel_t[y, x, z], self.voxel_t[y+1, x, z])
+            return True
+        else:
+            return False
+
+
 class PCGVoxelGenerator(nn.Module):
     def __init__(self, sample_size = 2048):
         super(PCGVoxelGenerator, self).__init__()
@@ -55,9 +122,10 @@ class PCGVoxelGenerator(nn.Module):
         chunk_semantic_map = torch.from_numpy(semantic_map)
         chunk_semantic_map = biome2mclabels[chunk_semantic_map[None, ...].long().contiguous()]
         world_voxel_t = world_voxel_t.scatter_(0, chunk_height_map, chunk_semantic_map)
-        for preproc_step in range(16):
+        pad_num = 16
+        for preproc_step in range(pad_num):
             world_voxel_t = world_voxel_t.scatter(0, torch.clip(chunk_height_map + preproc_step + 1, 0, self.sample_height - 1), chunk_semantic_map)
-        chunk_height_map = chunk_height_map + 16
+        chunk_height_map = chunk_height_map + pad_num
         chunk_height_map = chunk_height_map[0]
         boundary_detect = 50
 

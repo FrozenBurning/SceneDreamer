@@ -38,6 +38,7 @@
 </div>
 
 ## Updates
+[09/2023] Training code released! :star_struck:
 
 [04/2023] Hugging Face demo released! [![demo](https://img.shields.io/badge/Demo-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/FrozenBurning/SceneDreamer)
 
@@ -142,6 +143,57 @@ You can also locally launch our demo with gradio UI by:
 python app_gradio.py
 ```
 Alternatively, you can run the demo online [![Open in Spaces](https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg)](https://huggingface.co/spaces/FrozenBurning/SceneDreamer)
+
+## Training
+
+### Data Preparation
+
+#### Generating BEV of Training Scenes
+You need to first run the following command to generate the training scenes. This is a parallel script which will call the subprocess of `single_terrain_gen.py`. You could specify the total number of scenes using `--bs` and the number of workers in parallel using `--num_workers`. By default, the generated training scenes will be stored in `./data/terrain_dataset`
+```bash
+python ./scripts/batch_terrain_gen.py --size 2048 --seed 42 --outdir ./data/terrain_dataset --bs 1024 --parallel --num_workers 16
+```
+
+Then, for training efficiency, we cache all training scenes as sparse voxels to avoid computing on-the-fly. You need to run the following command:
+```bash
+python ./scripts/pcg_cache.py --terrain ./data/terrain_dataset --outdir ./data/terrain_cache
+```
+
+#### Download Pretrained SPADE on 1.1M Images :boom:
+We release the checkpoint of SPADE which is trained on 1.1M images collected from the web. You could download it from [Google Drive](https://drive.google.com/file/d/1Pn87N3lXFd-YoaxBvrXBr5Bct9HdkRB0/view?usp=sharing). [![Google Drive](https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=yellow)](https://drive.google.com/file/d/1Pn87N3lXFd-YoaxBvrXBr5Bct9HdkRB0/view?usp=sharing)
+
+#### Prepare Images and Segmentation Masks
+We refer you to public available datasets like [LHQ](https://github.com/universome/alis) for paired images and segmentation maps. Note that, we use 1.1M images collected from the web for training. The segmentation mask is generated using [ViT-Adapter](https://github.com/czczup/ViT-Adapter). Once you get the images and segmentations ready, please organize them as follows:
+```
+├── ...
+└── ./data/lhq
+    ├── train
+        ├── images
+        └── seg_maps
+    └── val
+        ├── images
+        └── seg_maps
+```
+
+Then, you need the following command to dump all images into lmdb for efficient training:
+```bash
+for f in train val; do\
+python scripts/build_lmdb.py \\
+--config configs/img2lmdb.yaml \\
+--data_root ./data/lhq/${f} \\
+--output_root ./data/lhq_lmdb/${f} \\
+--overwrite \\
+--paired\
+done
+```
+
+### Launch Training :rocket:
+You are all set! Run the following command to launch the training of SceneDreamer:
+```bash
+python -m torch.distributed.launch --nproc_per_node=8 --master_port=8888 train.py --config configs/scenedreamer_train.yaml --seed 3407
+```
+
+Note that, we use 8 GPUs for training by default. Please adjust `--nproc_per_node` to the number you want. Moreover, please specify the correct path for data in [scenedreamer_train.yaml](./configs/scenedreamer_train.yaml) and correct path for the pretrained SPADE (`./landscape1m-segformer.pt` by default) in the [landscape1m.yaml](./configs/landscape1m.yaml).
 
 ## License
 

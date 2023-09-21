@@ -76,6 +76,7 @@ input/
 saved/
 datasets/
 test/
+logs/
 
 # editor, os cache directory
 .vscode/
