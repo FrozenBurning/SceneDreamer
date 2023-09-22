@@ -79,3 +79,15 @@ gen:
     use_label_smooth_real: True
     use_label_smooth_pgt: True
     label_smooth_dia: 11
+
+    # ======== Camera sampler ========
+    camera_sampler_type: 'traditional'
+    cam_res: [360, 640] # Camera resolution before cropping.
+    crop_size: [256, 256] # Actual crop size is crop_size+pad. It should generally match random_crop_h_w in dataloader.
+
+    # Threshold for rejecting camera poses that will result in a seg mask with low entropy.
+    # Generally, 0.5 min, 0.8 max.
+    camera_min_entropy: 0.75
+
+    # Threshold for rejecting camera poses that are too close to the objects.
+    camera_rej_avg_depth: 2.0
