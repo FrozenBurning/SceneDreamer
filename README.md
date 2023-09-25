@@ -10,7 +10,9 @@
 <div>
     S-Lab, Nanyang Technological University
 </div>
-
+<div>
+    TPAMI, 2023
+</div>
 <div>
 
 <a target="_blank" href="https://arxiv.org/abs/2302.01330">
@@ -38,6 +40,8 @@
 </div>
 
 ## Updates
+[09/2023] SceneDreamer has been accepted to TPAMI 2023! :partying_face:
+
 [09/2023] Training code released! :star_struck:
 
 [04/2023] Hugging Face demo released! [![demo](https://img.shields.io/badge/Demo-%F0%9F%A4%97%20Hugging%20Face-blue)](https://huggingface.co/spaces/FrozenBurning/SceneDreamer)
