@@ -53,11 +53,19 @@
 ## Citation
 If you find our work useful for your research, please consider citing this paper:
 ```
-@inproceedings{chen2023sd,
-    title={SceneDreamer: Unbounded 3D Scene Generation from 2D Image Collections},
-    author={Chen, Zhaoxi and Wang, Guangcong and Liu, Ziwei},
-    booktitle={arXiv},
-    year={2023},
+@ARTICLE {chen2023sd,
+author = {Z. Chen and G. Wang and Z. Liu},
+journal = {IEEE Transactions on Pattern Analysis &amp; Machine Intelligence},
+title = {SceneDreamer: Unbounded 3D Scene Generation From 2D Image Collections},
+year = {2023},
+volume = {45},
+number = {12},
+issn = {1939-3539},
+pages = {15562-15576},
+doi = {10.1109/TPAMI.2023.3321857},
+publisher = {IEEE Computer Society},
+address = {Los Alamitos, CA, USA},
+month = {dec}
 }
 ```
 
