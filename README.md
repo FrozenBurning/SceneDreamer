@@ -53,10 +53,10 @@
 ## Citation
 If you find our work useful for your research, please consider citing this paper:
 ```
-@ARTICLE {chen2023sd,
-author = {Z. Chen and G. Wang and Z. Liu},
-journal = {IEEE Transactions on Pattern Analysis &amp; Machine Intelligence},
-title = {SceneDreamer: Unbounded 3D Scene Generation From 2D Image Collections},
+@article {chen2023sd,
+author = {Zhaoxi Chen and Guangcong Wang and Ziwei Liu},
+journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+title = {{SceneDreamer}: Unbounded 3{D} Scene Generation From 2{D} Image Collections},
 year = {2023},
 volume = {45},
 number = {12},
@@ -65,7 +65,7 @@ pages = {15562-15576},
 doi = {10.1109/TPAMI.2023.3321857},
 publisher = {IEEE Computer Society},
 address = {Los Alamitos, CA, USA},
-month = {dec}
+month = {Dec}
 }
 ```
 
