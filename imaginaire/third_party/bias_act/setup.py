@@ -26,7 +26,7 @@ if cuda_version is not None:
         nvcc_args.append('arch=compute_80,code=sm_80')
 nvcc_args.append('-Xcompiler')
 nvcc_args.append('-Wall')
-nvcc_args.append('-std=c++14')
+nvcc_args.append('-std=c++17')
 
 setup(
     name='bias_act_cuda',
@@ -35,7 +35,7 @@ setup(
         CUDAExtension('bias_act_cuda', [
             './src/bias_act_cuda.cc',
             './src/bias_act_cuda_kernel.cu'
-        ], extra_compile_args={'cxx': ['-Wall', '-std=c++14'],
+        ], extra_compile_args={'cxx': ['-Wall', '-std=c++17'],
                                'nvcc': nvcc_args})
     ],
     cmdclass={
